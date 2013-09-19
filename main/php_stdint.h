@@ -149,7 +149,7 @@ typedef int64 int64_t;
 # elif SIZEOF_INT >= 8
 typedef int int64_t;
 # elif SIZEOF_LONG >= 8
-typedef long int64_t;
+/* typedef long int64_t; */
 # elif SIZEOF_LONG_LONG >= 8
 typedef long long int64_t;
 # else
@@ -175,7 +175,7 @@ typedef u_int64_t uint64_t;
 # elif SIZEOF_INT >= 8
 typedef unsigned int uint64_t;
 # elif SIZEOF_LONG >= 8
-typedef unsigned long uint64_t;
+/* typedef unsigned long uint64_t; */
 # elif SIZEOF_LONG_LONG >= 8
 typedef unsigned long long uint64_t;
 # else
