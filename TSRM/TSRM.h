@@ -56,7 +56,7 @@ typedef unsigned long tsrm_uintptr_t;
 #elif defined(TSRM_ST)
 # include <st.h>
 #elif defined(BETHREADS)
-#include <kernel/OS.h> 
+#include <kernel/OS.h>
 #include <TLS.h>
 #endif
 
@@ -87,7 +87,7 @@ typedef struct {
   sem_id sem;
   int32 ben;
 } beos_ben;
-# define MUTEX_T beos_ben * 
+# define MUTEX_T beos_ben *
 #endif
 
 #ifdef HAVE_SIGNAL_H
@@ -173,6 +173,10 @@ TSRM_API void tsrm_free_interpreter_context(void *context);
 
 #else /* non ZTS */
 
+#ifdef PHO
+#include "../Pho/Pho.h"
+#else
+
 #define TSRMLS_FETCH()
 #define TSRMLS_FETCH_FROM_CTX(ctx)
 #define TSRMLS_SET_CTX(ctx)
@@ -180,6 +184,8 @@ TSRM_API void tsrm_free_interpreter_context(void *context);
 #define TSRMLS_DC
 #define TSRMLS_C
 #define TSRMLS_CC
+
+#endif
 
 #endif /* ZTS */
 
