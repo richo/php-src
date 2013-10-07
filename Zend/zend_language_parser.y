@@ -48,9 +48,12 @@ static YYSIZE_T zend_yytnamerr(char*, const char*);
 %expect 3
 
 %code requires {
-#ifdef ZTS
+#if defined(ZTS)
 # define YYPARSE_PARAM tsrm_ls
 # define YYLEX_PARAM tsrm_ls
+#elif defined(PHO)
+# define YYPARSE_PARAM vm
+# define YYLEX_PARAM vm
 #endif
 }
 
@@ -87,7 +90,7 @@ static YYSIZE_T zend_yytnamerr(char*, const char*);
 %left '?' ':'
 %left T_BOOLEAN_OR
 %token T_BOOLEAN_OR   "|| (T_BOOLEAN_OR)"
-%left T_BOOLEAN_AND 
+%left T_BOOLEAN_AND
 %token T_BOOLEAN_AND  "&& (T_BOOLEAN_AND)"
 %left '|'
 %left '^'
@@ -126,9 +129,9 @@ static YYSIZE_T zend_yytnamerr(char*, const char*);
 %token T_IF        "if (T_IF)"
 %left T_ELSEIF
 %token T_ELSEIF    "elseif (T_ELSEIF)"
-%left T_ELSE 
+%left T_ELSE
 %token T_ELSE      "else (T_ELSE)"
-%left T_ENDIF 
+%left T_ENDIF
 %token T_ENDIF     "endif (T_ENDIF)"
 %token T_LNUMBER   "integer number (T_LNUMBER)"
 %token T_DNUMBER   "floating-point number (T_DNUMBER)"
@@ -328,7 +331,7 @@ unticked_statement:
 
 catch_statement:
 				/* empty */ { $$.op_type = IS_UNUSED; }
-	|	T_CATCH '(' { zend_initialize_try_catch_element(&$1 TSRMLS_CC); } 
+	|	T_CATCH '(' { zend_initialize_try_catch_element(&$1 TSRMLS_CC); }
 		fully_qualified_class_name { zend_do_first_catch(&$2 TSRMLS_CC); }
 		T_VARIABLE ')' { zend_do_begin_catch(&$1, &$4, &$6, &$2 TSRMLS_CC); }
 		'{' inner_statement_list '}' { zend_do_end_catch(&$1 TSRMLS_CC); }
@@ -1232,7 +1235,7 @@ static YYSIZE_T zend_yytnamerr(char *yyres, const char *yystr)
 			char buffer[120];
 			const unsigned char *end, *str, *tok1 = NULL, *tok2 = NULL;
 			unsigned int len = 0, toklen = 0, yystr_len;
-			
+
 			CG(parse_error) = 1;
 
 			if (LANG_SCNG(yy_text)[0] == 0 &&
@@ -1241,11 +1244,11 @@ static YYSIZE_T zend_yytnamerr(char *yyres, const char *yystr)
 				yystpcpy(yyres, "end of file");
 				return sizeof("end of file")-1;
 			}
-			
+
 			str = LANG_SCNG(yy_text);
 			end = memchr(str, '\n', LANG_SCNG(yy_leng));
 			yystr_len = yystrlen(yystr);
-			
+
 			if ((tok1 = memchr(yystr, '(', yystr_len)) != NULL
 				&& (tok2 = zend_memrchr(yystr, ')', yystr_len)) != NULL) {
 				toklen = (tok2 - tok1) + 1;
@@ -1253,7 +1256,7 @@ static YYSIZE_T zend_yytnamerr(char *yyres, const char *yystr)
 				tok1 = tok2 = NULL;
 				toklen = 0;
 			}
-			
+
 			if (end == NULL) {
 				len = LANG_SCNG(yy_leng) > 30 ? 30 : LANG_SCNG(yy_leng);
 			} else {
@@ -1266,8 +1269,8 @@ static YYSIZE_T zend_yytnamerr(char *yyres, const char *yystr)
 			}
 			yystpcpy(yyres, buffer);
 			return len + (toklen ? toklen + 1 : 0) + 2;
-		}		
-	}	
+		}
+	}
 	if (*yystr == '"') {
 		YYSIZE_T yyn = 0;
 		const char *yyp = yystr;

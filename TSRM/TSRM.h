@@ -40,6 +40,10 @@ typedef long tsrm_intptr_t;
 typedef unsigned long tsrm_uintptr_t;
 #endif
 
+#ifdef PHO
+#include "../Pho/Pho.h"
+#else
+
 /* Only compile multi-threading functions if we're in ZTS mode */
 #ifdef ZTS
 
@@ -173,10 +177,6 @@ TSRM_API void tsrm_free_interpreter_context(void *context);
 
 #else /* non ZTS */
 
-#ifdef PHO
-#include "../Pho/Pho.h"
-#else
-
 #define TSRMLS_FETCH()
 #define TSRMLS_FETCH_FROM_CTX(ctx)
 #define TSRMLS_SET_CTX(ctx)
@@ -185,8 +185,8 @@ TSRM_API void tsrm_free_interpreter_context(void *context);
 #define TSRMLS_C
 #define TSRMLS_CC
 
-#endif
-
 #endif /* ZTS */
+
+#endif /* PHO */
 
 #endif /* TSRM_H */

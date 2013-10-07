@@ -32,9 +32,13 @@
 #define YYERROR_VERBOSE
 #define YYSTYPE zval
 
-#ifdef ZTS
+#if defined(ZTS)
 #define YYPARSE_PARAM tsrm_ls
 #define YYLEX_PARAM tsrm_ls
+int ini_parse(void *arg);
+#elif defined(PHO)
+#define YYPARSE_PARAM vm
+#define YYLEX_PARAM vm
 int ini_parse(void *arg);
 #else
 int ini_parse(void);
@@ -210,7 +214,7 @@ ZEND_API int zend_parse_ini_file(zend_file_handle *fh, zend_bool unbuffered_erro
 	zend_file_handle_dtor(fh TSRMLS_CC);
 
 	shutdown_ini_scanner(TSRMLS_C);
-	
+
 	if (retval == 0) {
 		return SUCCESS;
 	} else {

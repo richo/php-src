@@ -1973,9 +1973,13 @@ int php_module_startup(sapi_module_struct *sf, zend_module_entry *additional_mod
 	int retval = SUCCESS, module_number=0;	/* for REGISTER_INI_ENTRIES() */
 	char *php_os;
 	zend_module_entry *module;
-#ifdef ZTS
+#if defined(ZTS)
 	zend_executor_globals *executor_globals;
 	void ***tsrm_ls;
+	php_core_globals *core_globals;
+#elif defined(PHO)
+	zend_executor_globals *executor_globals;
+	void ***vm;
 	php_core_globals *core_globals;
 #endif
 
@@ -2406,7 +2410,7 @@ PHPAPI int php_execute_script(zend_file_handle *primary_file TSRMLS_DC)
 {
 	zend_file_handle *prepend_file_p, *append_file_p;
 	zend_file_handle prepend_file = {0}, append_file = {0};
-#if HAVE_BROKEN_GETCWD 
+#if HAVE_BROKEN_GETCWD
 	volatile int old_cwd_fd = -1;
 #else
 	char *old_cwd;

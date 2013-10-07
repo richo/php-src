@@ -796,13 +796,13 @@ void zend_post_startup(TSRMLS_D) /* {{{ */
 	free(compiler_globals->function_table);
 	free(compiler_globals->class_table);
 	if ((script_encoding_list = (zend_encoding **)compiler_globals->script_encoding_list)) {
-		compiler_globals_ctor(compiler_globals, tsrm_ls);
+		compiler_globals_ctor(compiler_globals TSRMLS_CC);
 		compiler_globals->script_encoding_list = (const zend_encoding **)script_encoding_list;
 	} else {
-		compiler_globals_ctor(compiler_globals, tsrm_ls);
+		compiler_globals_ctor(compiler_globals TSRMLS_CC);
 	}
 	free(EG(zend_constants));
-	executor_globals_ctor(executor_globals, tsrm_ls);
+	executor_globals_ctor(executor_globals TSRMLS_CC);
 	global_persistent_list = &EG(persistent_list);
 	zend_copy_ini_directives(TSRMLS_C);
 #endif
@@ -1306,7 +1306,7 @@ ZEND_API int zend_execute_scripts(int type TSRMLS_DC, zval **retval, int file_co
                 CG(interactive) = 1;
             }
         }
-       
+
 		EG(active_op_array) = zend_compile_file(file_handle, type TSRMLS_CC);
 		if (file_handle->opened_path) {
 			int dummy = 1;

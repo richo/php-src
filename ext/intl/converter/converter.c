@@ -25,7 +25,9 @@
 
 typedef struct _php_converter_object {
 	zend_object obj;
-#ifdef ZTS
+#if defined(ZTS)
+	void ***tsrm_ls;
+#elif defined(PHO)
 	void ***tsrm_ls;
 #endif
 	UConverter *src, *dest;
@@ -849,7 +851,7 @@ static PHP_METHOD(UConverter, transcode) {
 	} else {
 		RETVAL_FALSE;
 	}
-	
+
 	if (src_cnv) {
 		ucnv_close(src_cnv);
 	}
@@ -871,7 +873,7 @@ static PHP_METHOD(UConverter, getErrorCode) {
 		RETURN_FALSE;
 	}
 
-	RETURN_LONG(intl_error_get_code(&(objval->error) TSRMLS_CC));	
+	RETURN_LONG(intl_error_get_code(&(objval->error) TSRMLS_CC));
 }
 /* }}} */
 

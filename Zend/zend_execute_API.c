@@ -1348,6 +1348,9 @@ static LRESULT CALLBACK zend_timeout_WndProc(HWND hWnd, UINT message, WPARAM wPa
 #ifdef ZTS
 				void ***tsrm_ls;
 #endif
+#ifdef PFO
+				void ***vm;
+#endif
 				SetTimer(timeout_window, wParam, lParam*1000, NULL);
 #ifdef ZTS
 				tsrm_ls = ts_resource_ex(0, &wParam);
@@ -1369,6 +1372,15 @@ static LRESULT CALLBACK zend_timeout_WndProc(HWND hWnd, UINT message, WPARAM wPa
 
 				tsrm_ls = ts_resource_ex(0, &wParam);
 				if (!tsrm_ls) {
+					/* Thread died before receiving its timeout? */
+					break;
+				}
+#endif
+#ifdef PHO
+				void ***vm;
+
+				vm = ts_resource_ex(0, &wParam);
+				if (!vm) {
 					/* Thread died before receiving its timeout? */
 					break;
 				}
